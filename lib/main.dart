@@ -3,14 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:polygon_drawing/common/theme/app_theme.dart';
 import 'package:polygon_drawing/presentation/screens/polygon_drawing_screen.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  //await configureDependencies(Environment.dev);
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+final class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.defaults(),
       initialRoute: PolygonDrawingScreen.routeName,
       routes: {
-        PolygonDrawingScreen.routeName: (context) => PolygonDrawingScreen(),
+        PolygonDrawingScreen.routeName: (_) => PolygonDrawingScreen(),
       },
     );
   }

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 
-class StepInfo extends Equatable {
+final class StepInfo extends Equatable {
   final int index;
   final bool isComplete;
   final Point point;
@@ -14,5 +14,5 @@ class StepInfo extends Equatable {
   });
 
   @override
-  List<Object?> get props => [index, isComplete, point];
+  List<Object> get props => [index, isComplete, point];
 }
