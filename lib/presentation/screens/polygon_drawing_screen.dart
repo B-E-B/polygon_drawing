@@ -49,11 +49,11 @@ final class _WorkSpace extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
       onPanEnd: (_) {
-        if (state.isComplete) return;
-        ref.notifier.registerChanges();
-        ref.notifier.tryCompletePolygon();
+        if (!state.isComplete) {
+          ref.notifier.registerChanges();
+          ref.notifier.tryCompletePolygon();
+        }
         ref.notifier.handleIntersections();
       },
       onPanStart: (details) => state.isComplete

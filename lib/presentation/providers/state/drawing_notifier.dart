@@ -165,16 +165,48 @@ final class PolygonDrawingNotifier extends StateNotifier<PolygonDrawingState> {
   }
 
   void handleIntersections() {
-    if (state.polygonVertices.length < 3 || state.isComplete) return;
-
+    if (state.polygonVertices.length < 4 || (state.indexOfSelectedPoint == null && state.isComplete)) {
+      return;
+    }
     final len = state.polygonVertices.length;
-    for (int i = 0; i < len - 3; i++) {
-      if (_checkIntersection(state.polygonVertices[len - 2], state.polygonVertices[len - 1], state.polygonVertices[i],
-          state.polygonVertices[i + 1])) {
-        state = state.copyWith(polygonVertices: state.polygonVertices.getRange(0, len - 1).toList());
-        return;
+    List<Point>? newPolygon;
+
+    if (state.indexOfSelectedPoint != null) {
+      final int selectedIndex = state.indexOfSelectedPoint!;
+      for (int i = 0; i < len - 1; i++) {
+        final p1 = state.polygonVertices[selectedIndex];
+        final p2a = state.polygonVertices[selectedIndex == len - 1 ? 1 : selectedIndex + 1];
+        final p2b = state.polygonVertices[selectedIndex == 0 ? len - 2 : selectedIndex - 1];
+        final p3 = state.polygonVertices[i];
+        final p4 = state.polygonVertices[i + 1];
+        if (p1 == p3 || p1 == p4) continue;
+        if ((p2a != p3 && p2a != p4 && _checkIntersection(p1, p2a, p3, p4)) ||
+            (p2b != p3 && p2b != p4 && _checkIntersection(p1, p2b, p3, p4))) {
+          final lastStep = state.previousSteps.last;
+          newPolygon = lastStep.index == 0
+              ? [
+                  lastStep.point,
+                  ...state.polygonVertices.getRange(1, len - 1),
+                  lastStep.point,
+                ]
+              : [
+                  ...state.polygonVertices.getRange(0, lastStep.index),
+                  lastStep.point,
+                  ...state.polygonVertices.getRange(lastStep.index + 1, len),
+                ];
+          break;
+        }
+      }
+    } else {
+      for (int i = 0; i < len - 3; i++) {
+        if (_checkIntersection(state.polygonVertices[len - 2], state.polygonVertices[len - 1], state.polygonVertices[i],
+            state.polygonVertices[i + 1])) {
+          newPolygon = state.polygonVertices.getRange(0, len - 1).toList();
+          break;
+        }
       }
     }
+    state = state.copyWith(polygonVertices: newPolygon ?? state.polygonVertices);
   }
 
 //Метод isPointInsidePolygon определяет, находится ли точка внутри многоугольника.

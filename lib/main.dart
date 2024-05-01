@@ -19,7 +19,7 @@ final class MyApp extends StatelessWidget {
       theme: AppTheme.defaults(),
       initialRoute: PolygonDrawingScreen.routeName,
       routes: {
-        PolygonDrawingScreen.routeName: (_) => PolygonDrawingScreen(),
+        PolygonDrawingScreen.routeName: (_) => const PolygonDrawingScreen(),
       },
     );
   }
